@@ -1,0 +1,29 @@
+# develop version of docker-compose
+version: "3.9"
+
+
+volumes:
+  postgres_data_dev:
+
+
+services:
+  db:
+    image: postgres:13.0
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    env_file:
+      - ./.env
+
+  web:
+    build: src
+#    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src/:/opt/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
