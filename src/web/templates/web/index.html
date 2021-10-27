@@ -4,12 +4,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Magic Binance Smart Chain</title>
+    <title>Chain Poker | Holdem on Binance</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
     <script src="https://auth.magic.link/sdk"></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.3.4/dist/web3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
       const BSCOptions = {
         /* Smart Chain Testnet RPC URL */
@@ -46,9 +47,15 @@
         let txnHtml = "";
         let signHtml = "";
         let contractHtml = "";
+        let gameHtml = "";
         let cardUserHtml = "";  // 2 cards
         let cardDeskHtml = "";  // 3 + 1 + 1 cards
         const target = document.querySelector("#app");
+
+        let currentGameHash = "";
+        let currentGameStage = "";
+        let currentGame = await getData('https://api.icndb.com/jokes/random');
+        console.log(currentGame);
 
         if (isLoggedIn) {
           /* Get user metadata including email */
@@ -58,9 +65,14 @@
           const userBalance = web3.utils.fromWei(
             await web3.eth.getBalance(userAddress) // Balance is in wei
           );
+          // await handleBackendGameUpdate();
+
           authHtml = `
             <div class="container">
-              <h1>Current user: ${userMetadata.email}</h1>
+              <h1>Current user</h1>
+              <div class="info">
+                  ${userMetadata.email}
+              </div>
               <button onclick="handleLogout()">Logout</button>
             </div>
           `;
@@ -77,6 +89,27 @@
               <a href="https://testnet.binance.org/faucet-smart" target="_blank">Get Test BNB</a>
             </div>
           `;
+          if (false) { // todo: currentGame
+            gameHtml = `
+            <div class="container">
+              <h1>Current Game: ${currentGame.value.id}</h1>
+              <button onclick="handleLogout()">Logout</button>
+<!--              // start new-->
+<!--              //join-->
+            </div>
+          `;
+          } else {
+            gameHtml = `
+            <div class="container">
+              <h1>Join or Create a Game</h1>
+              <form onsubmit="handleCreateGame(event)">
+                <input type="text" name="new-message" class="full-width" required="required" placeholder="Game Url" />
+                <button id="btn-deploy" onclick="handleJoinGame()">Join</button>
+                <button id="btn-update-msg" type="submit">Create</button>
+              </form>
+            </div>
+          `;
+          }
           txnHtml = `
             <div class="container">
               <h1>Send Transaction</h1>
@@ -121,7 +154,7 @@
           `;
         }
         target.innerHTML =
-          authHtml + userHtml + txnHtml + signHtml + contractHtml;
+          authHtml + userHtml + gameHtml + txnHtml + signHtml + contractHtml;
       };
 
       const handleLogin = async (e) => {
@@ -220,7 +253,34 @@
         await magic.user.logout();
         render();
       };
+
+      function getData(ajaxurl) {
+        return $.ajax({
+          url: ajaxurl,
+          type: 'GET',
+        });
+      }
+
+      const handleCreateGame = async (e) => {
+        e.preventDefault();
+        const btnUpdateMsg = document.getElementById("btn-render");
+        btnUpdateMsg.disabled = true;
+        btnUpdateMsg.innerText = "Updating...";
+        render();
+      };
+      // async function handleBackendGameUpdate() {
+      //   try {
+      //     const res = await getData('https://api.icndb.com/jokes/random')
+      //     console.log(res);
+      //     currentGame = "af";
+      //     console.log(currentGame);
+      //   } catch(err) {
+      //     console.log(err);
+      //   }
+      // }
+
     </script>
+
   </head>
   <body onload="render()">
     <div id="app">
