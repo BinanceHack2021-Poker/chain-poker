@@ -9,7 +9,7 @@ class Player(models.Model):
 
 
 class Game(models.Model):
-    secure_identity = models.CharField(max_length=256, unique=True)  # todo: specify exact behaviour
+    identifier = models.CharField(max_length=256, unique=True)  # todo: specify exact behaviour
     player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='created_games')
     player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='joined_games', null=True, blank=True)
     created = models.DateTimeField(default=timezone.now)
@@ -19,7 +19,7 @@ class Game(models.Model):
     player2_joined = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        self.secure_identity = uuid.uuid4().hex
+        self.identifier = uuid.uuid4().hex
         return super().save(*args, **kwargs)
 
 

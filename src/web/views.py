@@ -8,11 +8,11 @@ from web.models import Game
 logger = logging.getLogger(__name__)
 
 
-class IndexView(DetailView):
-    template_name = 'web/index.html'
+class GameView(DetailView):
+    template_name = 'web/game.html'
     context_object_name = 'game'
     model = Game
-    slug_field = 'secure_identity'
+    slug_field = 'identifier'
 
 
 class JoinOrCreateView(TemplateView):

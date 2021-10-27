@@ -122,7 +122,7 @@
             }),
             success: function(response) {
                 console.log(response);
-                document.getElementById("input-game-identifier").value = response.secure_identity;
+                document.getElementById("input-game-identifier").value = response.identifier;
             },
             error: function(e) {
                 console.log('error happened...');
