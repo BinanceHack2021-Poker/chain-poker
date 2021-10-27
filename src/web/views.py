@@ -1,11 +1,7 @@
 # todo: views should be rewritten to API for reactApp as frontend
-import logging
-
 from django.views.generic import TemplateView, DetailView
 
 from web.models import Game
-
-logger = logging.getLogger(__name__)
 
 
 class GameView(DetailView):

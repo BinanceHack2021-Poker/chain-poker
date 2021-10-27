@@ -1,6 +1,5 @@
 {% load static %}
 <!--	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_pack/apple-touch-icon.png' %}">-->
-<!-- via https://www.binance.org/en/blog/build-user-friendly-dapps-with-binance-smart-chain-in-minutes/-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -54,8 +53,6 @@
 
         let currentGameHash = "";
         let currentGameStage = "";
-        let currentGame = await getData('https://api.icndb.com/jokes/random');
-        console.log(currentGame);
 
         if (isLoggedIn) {
           /* Get user metadata including email */
@@ -76,6 +73,29 @@
               <button onclick="handleLogout()">Logout</button>
             </div>
           `;
+          gameHtml = `
+             <div class="container">
+                <h1>Game</h1>
+                <div class="info">
+                    <p>{{ game.identifier }}</p>
+                </div>
+
+                <h1>Current Stage</h1>
+                <div id="game-stage" class="info">
+                    <p>todo: 0, 1, 2</p>
+                </div>
+
+                <h1>Desk</h1>
+                <div id="game-desk-cards" class="info">
+                    <p>todo</p>
+                </div>
+
+                <h1>Your cards</h1>
+                <div id="game-player-cards" class="info">
+                    <p>todo</p>
+                </div>
+             </div>
+          `;
           userHtml = `
             <div class="container">
               <h1>Binance Smart Chain Address</h1>
@@ -89,27 +109,6 @@
               <a href="https://testnet.binance.org/faucet-smart" target="_blank">Get Test BNB</a>
             </div>
           `;
-          if (false) { // todo: currentGame
-            gameHtml = `
-            <div class="container">
-              <h1>Current Game: ${currentGame.value.id}</h1>
-              <button onclick="handleLogout()">Logout</button>
-<!--              // start new-->
-<!--              //join-->
-            </div>
-          `;
-          } else {
-            gameHtml = `
-            <div class="container">
-              <h1>Join or Create a Game</h1>
-              <form onsubmit="handleCreateGame(event)">
-                <input type="text" name="new-message" class="full-width" required="required" placeholder="Game Url" />
-                <button id="btn-deploy" onclick="handleJoinGame()">Join</button>
-                <button id="btn-update-msg" type="submit">Create</button>
-              </form>
-            </div>
-          `;
-          }
           txnHtml = `
             <div class="container">
               <h1>Send Transaction</h1>
@@ -154,7 +153,7 @@
           `;
         }
         target.innerHTML =
-          authHtml + userHtml + gameHtml + txnHtml + signHtml + contractHtml;
+          authHtml + gameHtml + userHtml + txnHtml + signHtml + contractHtml;
       };
 
       const handleLogin = async (e) => {
@@ -254,30 +253,20 @@
         render();
       };
 
-      function getData(ajaxurl) {
-        return $.ajax({
-          url: ajaxurl,
-          type: 'GET',
-        });
-      }
-
-      const handleCreateGame = async (e) => {
-        e.preventDefault();
-        const btnUpdateMsg = document.getElementById("btn-render");
-        btnUpdateMsg.disabled = true;
-        btnUpdateMsg.innerText = "Updating...";
-        render();
-      };
-      // async function handleBackendGameUpdate() {
-      //   try {
-      //     const res = await getData('https://api.icndb.com/jokes/random')
-      //     console.log(res);
-      //     currentGame = "af";
-      //     console.log(currentGame);
-      //   } catch(err) {
-      //     console.log(err);
-      //   }
+      // function getData(ajaxurl) {
+      //   return $.ajax({
+      //     url: ajaxurl,
+      //     type: 'GET',
+      //   });
       // }
+      //
+      // const handleCreateGame = async (e) => {
+      //   e.preventDefault();
+      //   const btnUpdateMsg = document.getElementById("btn-render");
+      //   btnUpdateMsg.disabled = true;
+      //   btnUpdateMsg.innerText = "Updating...";
+      //   render();
+      // };
 
     </script>
 

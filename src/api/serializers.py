@@ -17,5 +17,5 @@ class GameSerializer(ModelSerializer):
         with transaction.atomic():
             player1, _ = Player.objects.get_or_create(address=validated_data['player1'])
             validated_data['player1'] = player1
-            # validated_data['agent'] = self.context['request'].user
+            # validated_data['pl'] = self.context['request'].user
             return super().create(validated_data)
